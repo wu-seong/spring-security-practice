@@ -1,10 +1,7 @@
 package io.security.springsecuritypractice.controller;
 
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,12 +12,28 @@ public class SecurityController {
         return "home";
     }
 
-    @GetMapping("/loginPage")
+    @GetMapping("/user")
+    public String user(){
+        return "user";
+    }
+    @GetMapping("/admin/pay")
+    public String adminPay(){
+        return "adminPay";
+    }
+
+    @GetMapping("/admin")
+    public String admin(){
+        return "admin";
+    }
+
+    @GetMapping("/login")
     public String login(){
-        return "loginPage";
+        return "login";
     }
-    @GetMapping("/redirect")
-    public String redirect(){
-        return "redirect";
+
+    @GetMapping("/denied")
+    public String denied(){
+        return "Access is denied";
     }
+
 }
