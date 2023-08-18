@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.AbstractRequestMatcherRegistry;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
@@ -37,19 +39,27 @@ import java.io.IOException;
 public class SecurityConfiguration {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-            http.
-                    authorizeHttpRequests(auth ->{
-                        auth.
-                            anyRequest().permitAll();
-                    });
-
-            http.
-                    formLogin(loginConfig ->{
-                        //loginConfig
-
-                    });
-
-
+           http
+                  .authorizeHttpRequests(auth ->{
+                      auth.requestMatchers("/admin/**").authenticated();
+                   })
+                   .httpBasic(basic ->{
+                   });
             return http.build();
         }
+}
+@Configuration
+class SecurityConfiguration2 {
+    @Bean
+    SecurityFilterChain securityFilterChain2(HttpSecurity http) throws Exception{
+        http.
+                authorizeHttpRequests(auth ->{
+                    auth.
+                           anyRequest().permitAll();
+                })
+                .formLogin(login -> {
+
+                });
+        return http.build();
+    }
 }
