@@ -1,39 +1,27 @@
 package io.security.springsecuritypractice.controller;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class SecurityController {
 
+    @ResponseBody
     @GetMapping("/")
     public String index(){
         return "home";
     }
 
-    @GetMapping("/user")
-    public String user(){
-        return "user";
-    }
-    @GetMapping("/admin/pay")
-    public String adminPay(){
-        return "adminPay";
+    @ResponseBody
+    @PostMapping("/")
+    public String postIndex(){
+        return "home";
     }
 
-    @GetMapping("/admin")
-    public String admin(){
-        return "admin";
-    }
-
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
-
-    @GetMapping("/denied")
-    public String denied(){
-        return "Access is denied";
+    @GetMapping("/test")
+    public String test(){
+        return "test";
     }
 
 }

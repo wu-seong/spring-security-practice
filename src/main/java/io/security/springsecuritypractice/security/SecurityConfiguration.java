@@ -34,74 +34,22 @@ import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfiguration {
-    @Bean
-    public UserDetailsManager users() {
-
-        UserDetails user = User.builder()
-                .username("user")
-                .password("{noop}1111")
-                .roles("USER")
-                .build();
-
-        UserDetails sys = User.builder()
-                .username("sys")
-                .password("{noop}1111")
-                .roles("SYS")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}1111")
-                .roles("ADMIN", "SYS", "USER")
-                .build();
-
-        return new InMemoryUserDetailsManager( user, sys, admin );
-    }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-
-        http.
-                authorizeHttpRequests(auth ->{
-                    auth.
-                            requestMatchers("/login").permitAll().
-                            requestMatchers("/user").hasRole("USER").
-                            requestMatchers("/admin/pay").hasRole("ADMIN").
-                            requestMatchers("/admin/**").hasAnyRole("ADMIN","SYS").
-                            anyRequest().authenticated();
-                });
-        http.
-                formLogin(login ->{
-                    login.successHandler(new AuthenticationSuccessHandler() {
-                        @Override
-                        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                            RequestCache requestCache = new HttpSessionRequestCache(); // requestcache를 가져옴
-                            SavedRequest savedRequest = requestCache.getRequest(request, response); //요청헤더에 있는 세션id를 통해 saved된 요청을 가져옴
-                            String redirectUrl = savedRequest.getRedirectUrl();
-                            response.sendRedirect(redirectUrl);
-                        }
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+            http.
+                    authorizeHttpRequests(auth ->{
+                        auth.
+                            anyRequest().permitAll();
                     });
-                });
+
+            http.
+                    formLogin(loginConfig ->{
+                        //loginConfig
+
+                    });
 
 
-
-        http.
-                exceptionHandling( httpSecurityExceptionHandlingConfigurer -> {
-                    httpSecurityExceptionHandlingConfigurer
-//                            .authenticationEntryPoint(new AuthenticationEntryPoint() { //인증 예외
-//                                @Override
-//                                public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-//                                    response.sendRedirect("/login");
-//                                }
-//                            })
-                            .accessDeniedHandler(new AccessDeniedHandler() { //인가 예외
-                                @Override
-                                public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                                    response.sendRedirect("/denied");
-                                }
-                            });
-                });
-        return http.build();
-    }
+            return http.build();
+        }
 }
