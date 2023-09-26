@@ -22,7 +22,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String credentials = (String)authentication.getCredentials();
 
-        AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(username);
+        AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(username); //username 존재 확인
 
         if(passwordEncoder.matches(credentials, accountContext.getPassword())){ //비밀번호가 다르면 예외
             throw new BadCredentialsException("BadCredentialsException");
